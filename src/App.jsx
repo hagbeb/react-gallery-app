@@ -3,6 +3,13 @@ import heroImg from './assets/hero.png'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import './App.css'
+import { apiKey as key } from 'config.js'
+
+// import components
+import PhotoList from "PhotoList";
+import Photo from "Photo";
+import Nav from "Nav";
+import Search from "Search";
 
 function App() {
   const [count, setCount] = useState(0)
