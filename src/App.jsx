@@ -3,19 +3,82 @@ import heroImg from './assets/hero.png'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import './App.css'
-import { apiKey as key } from 'config.js'
+import { default as key } from './config.js'
+
+// react router imports
+import { Routes, Route, Navigate } from 'react-router-dom';
 
 // import components
-import PhotoList from "PhotoList";
-import Photo from "Photo";
-import Nav from "Nav";
-import Search from "Search";
+import PhotoList from "./PhotoList";
+import Nav from "./Nav";
+import Search from "./Search";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
+  // state to store data retreived from Pixabay user searches
+  const [photos, storePhotos] = useState();
+  // states to store Pixabay photos for static pages, so they only need to be stored once
+  const [catPhotos, storeCatPhotos] = useState();
+  const [dogPhotos, storeDogPhotos] = useState();
+  const [computerPhotos, storeComputerPhotos] = useState();
+
+  // function to handle fetch requests. Pass in query entered by user
+  async function fetchData(userQuery) {
+    // build query to use in fecth
+    const fetchQuery = `https://pixabay.com/api/?key=${key}&q=${userQuery}&image_type=photo`;
+
+    // fetch images
+    try {
+      let response = await fetch(fetchQuery);
+      // if the response is not ok
+      if (!response.ok) {
+        throw new Error (`Error fetching. Status: ${response.status}`);
+      // if the response is OK
+      } else {
+        // convert to JSON, then save to responseData
+        let responseData = await response.json();
+        console.log(responseData);
+        // store the response from Pixabay in the relevant state
+        if (userQuery === 'cats') {
+          storeCatPhotos(responseData);
+
+        } else if (userQuery === 'dogs') {
+          storeDogPhotos(responseData);
+
+        } else if (userQuery === 'computers') {
+          storeComputerPhotos(responseData);
+
+        } else {
+          storePhotos(responseData);
+          console.log(photos);
+        }
+      }
+    } catch(error) {
+      console.log(error);
+    }
+  }
+
+  // fetch images for the static pages.
+  fetchData('cats');
+  fetchData('dogs');
+  fetchData('computers');
 
   return (
     <>
+      <Search />
+      <Nav />
+      <Routes>
+        <Route path="/">
+          {/* redirect from home page to first static route*/}
+          <Route index element={<Navigate replace={true} to="cats" />} />
+        </Route>
+        {/* static routes */}
+        <Route path="/cats" element={<PhotoList pageTitle='Cats' photos={catPhotos}/>} />
+        <Route path="/dogs" element={<PhotoList pageTitle='Dogs' photos={dogPhotos}/>} />
+        <Route path="/computers" element={<PhotoList pageTitle='Computers' photos={computerPhotos}/>} />
+        {/* search route */}
+        <Route path="/search/:query" element={<PhotoList />} />
+      </Routes>
       <section id="center">
         <div className="hero">
           <img src={heroImg} className="base" width="170" height="179" alt="" />
