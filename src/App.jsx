@@ -17,7 +17,7 @@ function App() {
   const [count, setCount] = useState(0);
   // state to store data retreived from Pixabay user searches
   const [photos, storePhotos] = useState();
-  // states to store Pixabay photos for static pages, so they only need to be stored once
+  // states to store Pixabay photos for static pages, so thy only need to be stored once
   const [catPhotos, storeCatPhotos] = useState();
   const [dogPhotos, storeDogPhotos] = useState();
   const [computerPhotos, storeComputerPhotos] = useState();
