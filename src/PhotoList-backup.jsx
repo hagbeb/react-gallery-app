@@ -4,10 +4,12 @@ import Photo from "./Photo";
 const PhotoList = (props) => {
     if (props.photos) {
       console.log('props.photos: ', props.photos);
-      return (
+    }
+    return (
       <div class="photo-container">
         <h2>Results</h2>
         <ul>
+          <Photo/>
           { 
             props.photos.hits.map(item => 
               <Photo 
@@ -15,21 +17,15 @@ const PhotoList = (props) => {
                 key={item.id}
             />
           )}
-        </ul>    
-      </div>
-
-      );
-    } else return (
+        
             <li class="not-found">
                 <h3>No Results Found</h3>
                 <p>You search did not return any results. Please try again.</p>
             </li>
+        </ul>
+      </div>
+
     );
-   
-        
-
-
-
 }
 
 export default PhotoList;

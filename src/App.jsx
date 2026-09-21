@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import heroImg from './assets/hero.png'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
@@ -13,55 +13,48 @@ import PhotoList from "./PhotoList";
 import Nav from "./Nav";
 import Search from "./Search";
 
+// function to handle fetch requests. Pass in query entered by user
+async function fetchData(userQuery) {
+  // build query to use in fecth
+  const fetchQuery = `https://pixabay.com/api/?key=${key}&q=${userQuery}&image_type=photo`;
+  // fetch images
+  try {
+    let response = await fetch(fetchQuery);
+    // if the response is not ok, throw error
+    if (!response.ok) {
+      throw new Error (`Error fetching. Status: ${response.status}`);
+    // if the response is OK
+    } else {
+      // convert to JSON, then return
+      return await response.json();
+    }
+  } catch(error) {
+    console.log(error);
+  }
+}
+
 function App() {
   const [count, setCount] = useState(0);
   // state to store data retreived from Pixabay user searches
-  const [photos, storePhotos] = useState();
-  // states to store Pixabay photos for static pages, so thy only need to be stored once
-  const [catPhotos, storeCatPhotos] = useState();
-  const [dogPhotos, storeDogPhotos] = useState();
-  const [computerPhotos, storeComputerPhotos] = useState();
+  const [photos, setPhotos] = useState();
+  // states to store Pixabay photos for static pages, so they only need to be stored once
+  const [catPhotos, setCatPhotos] = useState();
+  const [dogPhotos, setDogPhotos] = useState();
+  const [computerPhotos, setComputerPhotos] = useState();
 
-  // function to handle fetch requests. Pass in query entered by user
-  async function fetchData(userQuery) {
-    // build query to use in fecth
-    const fetchQuery = `https://pixabay.com/api/?key=${key}&q=${userQuery}&image_type=photo`;
-
-    // fetch images
-    try {
-      let response = await fetch(fetchQuery);
-      // if the response is not ok
-      if (!response.ok) {
-        throw new Error (`Error fetching. Status: ${response.status}`);
-      // if the response is OK
-      } else {
-        // convert to JSON, then save to responseData
-        let responseData = await response.json();
-        console.log(responseData);
-        // store the response from Pixabay in the relevant state
-        if (userQuery === 'cats') {
-          storeCatPhotos(responseData);
-
-        } else if (userQuery === 'dogs') {
-          storeDogPhotos(responseData);
-
-        } else if (userQuery === 'computers') {
-          storeComputerPhotos(responseData);
-
-        } else {
-          storePhotos(responseData);
-          console.log(photos);
-        }
-      }
-    } catch(error) {
-      console.log(error);
+  // fetch images for the static pages. Run in useEffect so function only runs once
+  useEffect(() => {
+    console.log('useEffect ran');
+    async function staticPhotos() {
+      console.log('running staticPhotos');
+      // use fetchData to get images. Save them to the relevant states.
+      setCatPhotos({...await fetchData('cats')});
+      setDogPhotos({...await fetchData('dogs')});
+      setComputerPhotos({...await fetchData('computers')});
     }
-  }
-
-  // fetch images for the static pages.
-  fetchData('cats');
-  fetchData('dogs');
-  fetchData('computers');
+      staticPhotos();
+       // Empty dependency array so useEffect only runs once
+    }, []);
 
   return (
     <>
