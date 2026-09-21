@@ -13,44 +13,53 @@ import PhotoList from "./PhotoList";
 import Nav from "./Nav";
 import Search from "./Search";
 
-// function to handle fetch requests. Pass in query entered by user
-async function fetchData(userQuery) {
-  // build query to use in fecth
-  const fetchQuery = `https://pixabay.com/api/?key=${key}&q=${userQuery}&image_type=photo`;
-  // fetch images
-  try {
-    let response = await fetch(fetchQuery);
-    // if the response is not ok, throw error
-    if (!response.ok) {
-      throw new Error (`Error fetching. Status: ${response.status}`);
-    // if the response is OK
-    } else {
-      // convert to JSON, then return
-      return await response.json();
-    }
-  } catch(error) {
-    console.log(error);
-  }
-}
-
 function App() {
   const [count, setCount] = useState(0);
   // state to store data retreived from Pixabay user searches
-  const [photos, setPhotos] = useState();
+  const [userPhotos, setUserPhotos] = useState();
   // states to store Pixabay photos for static pages, so they only need to be stored once
   const [catPhotos, setCatPhotos] = useState();
   const [dogPhotos, setDogPhotos] = useState();
   const [computerPhotos, setComputerPhotos] = useState();
-
+  // function to handle fetch requests. Pass in query entered by user
+  async function fetchData(userQuery) {
+    // build query to use in fecth
+    const fetchQuery = `https://pixabay.com/api/?key=${key}&q=${userQuery}&image_type=photo`;
+    // fetch images
+    try {
+      let response = await fetch(fetchQuery);
+      // if the response is not ok, throw error
+      if (!response.ok) {
+        throw new Error (`Error fetching. Status: ${response.status}`);
+      // if the response is OK
+      } else {
+        // convert to JSON, then return
+        let responseData = await response.json();
+        // update the appropriate state, depending on what was passed in
+        if (userQuery === 'cats') {
+          setCatPhotos(responseData);
+        } else if (userQuery === 'dogs') {
+          setDogPhotos(responseData);
+        } else if (userQuery === 'computers') {
+          setComputerPhotos(responseData);
+        // else if the parameter was a user search query
+        } else {
+          setUserPhotos(responseData);
+        }
+      }
+    } catch(error) {
+      console.log(error);
+    }
+  }
   // fetch images for the static pages. Run in useEffect so function only runs once
   useEffect(() => {
     console.log('useEffect ran');
     async function staticPhotos() {
       console.log('running staticPhotos');
       // use fetchData to get images. Save them to the relevant states.
-      setCatPhotos({...await fetchData('cats')});
-      setDogPhotos({...await fetchData('dogs')});
-      setComputerPhotos({...await fetchData('computers')});
+      fetchData('cats');
+      fetchData('dogs');
+      fetchData('computers');
     }
       staticPhotos();
        // Empty dependency array so useEffect only runs once
@@ -58,7 +67,7 @@ function App() {
 
   return (
     <>
-      <Search />
+      <Search makeSearch={fetchData} />
       <Nav />
       <Routes>
         <Route path="/">
@@ -70,7 +79,7 @@ function App() {
         <Route path="/dogs" element={<PhotoList pageTitle='Dogs' photos={dogPhotos}/>} />
         <Route path="/computers" element={<PhotoList pageTitle='Computers' photos={computerPhotos}/>} />
         {/* search route */}
-        <Route path="/search/:query" element={<PhotoList />} />
+        <Route path="/search/:query" element={<PhotoList pageTitle='Your search results:' photos={userPhotos} />} />
       </Routes>
       <section id="center">
         <div className="hero">

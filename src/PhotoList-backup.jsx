@@ -9,7 +9,6 @@ const PhotoList = (props) => {
       <div class="photo-container">
         <h2>Results</h2>
         <ul>
-          <Photo/>
           { 
             props.photos.hits.map(item => 
               <Photo 
