@@ -6,15 +6,16 @@ const Search = ({makeSearch}) => {
   const search = useRef();
   // create and store a useNavigate function using the useNavigate hook. 
   let navigate = useNavigate();
+
   // function for form submit
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     // prevent auto-refresh
     e.preventDefault();
     // store the users search value
     let userSearch = search.current.value;
     // call the fetchData function in App.jsx that was passed as 'makeSearch' prop.
     // pass in the users search in the form that as stored in 'userSearch'
-    makeSearch(userSearch);
+    await makeSearch(userSearch);
     // create the path to redirect to based on the user's search query
     let path = `./search/${userSearch}`;
     // redirect to page based on user's search to display results

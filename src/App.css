@@ -183,6 +183,12 @@
   }
 }
 
+/* Not found message */
+.not-found {
+  width: 100%;
+  text-align: center;
+}
+
 /* CSS for spinning loader icon. Credit to Brad Schiff */
 
 @keyframes spin {

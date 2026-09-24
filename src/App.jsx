@@ -36,15 +36,21 @@ function App() {
         // convert to JSON, then return
         let responseData = await response.json();
         // update the appropriate state, depending on what was passed in
+        // .hits is the array of photos
         if (userQuery === 'cats') {
-          setCatPhotos(responseData);
+          setCatPhotos(responseData.hits);
         } else if (userQuery === 'dogs') {
-          setDogPhotos(responseData);
+          setDogPhotos(responseData.hits);
         } else if (userQuery === 'computers') {
-          setComputerPhotos(responseData);
+          setComputerPhotos(responseData.hits);
         // else if the parameter was a user search query
         } else {
-          setUserPhotos(responseData);
+          // create a new object, from the existing state, then adding a new property...
+          // ... with user query and the returned object
+
+          let newSearchObject = { ...userPhotos };
+          newSearchObject[userQuery] = responseData.hits;
+          setUserPhotos(newSearchObject);
         }
       }
     } catch(error) {
@@ -79,7 +85,7 @@ function App() {
         <Route path="/dogs" element={<PhotoList pageTitle='Dogs' photos={dogPhotos}/>} />
         <Route path="/computers" element={<PhotoList pageTitle='Computers' photos={computerPhotos}/>} />
         {/* search route */}
-        <Route path="/search/:query" element={<PhotoList pageTitle='Your search results:' photos={userPhotos} />} />
+        <Route path="/search/:query" element={<PhotoList pageTitle='Your search results:' searchedPhotos={userPhotos} />} />
       </Routes>
       <section id="center">
         <div className="hero">
