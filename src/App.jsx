@@ -60,7 +60,7 @@ function App() {
       console.log(error);
     } finally {
       // once finished, set loading to false. But wait 2 secs if no photos were returned
-      if (responseData.hits) {
+      if (responseData) {
         console.log('loading: ', loading);
         setLoading(false);
       } else {
@@ -96,7 +96,9 @@ function App() {
         <Route path="/dogs" element={<PhotoList pageTitle='Dogs' photos={dogPhotos}/>} />
         <Route path="/computers" element={<PhotoList pageTitle='Computers' photos={computerPhotos}/>} />
         {/* search route */}
-        <Route key={userPhotos} path="/search/:query" element={(loading) ? <SpinningLoader/> : <PhotoList pageTitle='Your search results:' searchedPhotos={userPhotos} />} />
+        <Route key={userPhotos} path="/search/:query" element={loading 
+        ? (<SpinningLoader />) 
+        : (<PhotoList pageTitle='Your search results:' searchedPhotos={userPhotos} />)} />
         <Route path="*" element={<NotFound />}/>
       </Routes>
     </>
