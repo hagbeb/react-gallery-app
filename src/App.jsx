@@ -10,6 +10,7 @@ import PhotoList from "./PhotoList";
 import Nav from "./Nav";
 import Search from "./Search";
 import NotFound from "./NotFound";
+import SpinningLoader from './SpinningLoader.jsx';
 
 function App() {
   // state to store data retreived from Pixabay user searches
@@ -18,9 +19,15 @@ function App() {
   const [catPhotos, setCatPhotos] = useState();
   const [dogPhotos, setDogPhotos] = useState();
   const [computerPhotos, setComputerPhotos] = useState();
+  // state to store whether photos are currently being searched for
+  const [loading, setLoading] = useState(false);
   // function to handle fetch requests. Pass in query entered by user
   async function fetchData(userQuery) {
-    // build query to use in fecth
+    // set loading to true while we are searching
+    setLoading(true);
+    let responseData;
+    console.log('loading: ', loading);
+    // build query to use in fetch
     const fetchQuery = `https://pixabay.com/api/?key=${key}&q=${userQuery}&image_type=photo`;
     // fetch images
     try {
@@ -31,7 +38,7 @@ function App() {
       // if the response is OK
       } else {
         // convert to JSON, then return
-        let responseData = await response.json();
+        responseData = await response.json();
         // update the appropriate state, depending on what was passed in
         // .hits is the array of photos
         if (userQuery === 'cats') {
@@ -44,7 +51,6 @@ function App() {
         } else {
           // create a new object, from the existing state, then adding a new property...
           // ... with user query and the returned object
-
           let newSearchObject = { ...userPhotos };
           newSearchObject[userQuery] = responseData.hits;
           setUserPhotos(newSearchObject);
@@ -52,13 +58,21 @@ function App() {
       }
     } catch(error) {
       console.log(error);
+    } finally {
+      // once finished, set loading to false. But wait 2 secs if no photos were returned
+      if (responseData.hits) {
+        console.log('loading: ', loading);
+        setLoading(false);
+      } else {
+        setTimeout(() => setLoading(false), 2000);
+      }
+      console.log('loading: ', loading);
     }
   }
   // fetch images for the static pages. Run in useEffect so function only runs once
   useEffect(() => {
     console.log('useEffect ran');
     async function staticPhotos() {
-      console.log('running staticPhotos');
       // use fetchData to get images. Save them to the relevant states.
       fetchData('cats');
       fetchData('dogs');
@@ -82,7 +96,7 @@ function App() {
         <Route path="/dogs" element={<PhotoList pageTitle='Dogs' photos={dogPhotos}/>} />
         <Route path="/computers" element={<PhotoList pageTitle='Computers' photos={computerPhotos}/>} />
         {/* search route */}
-        <Route path="/search/:query" element={<PhotoList pageTitle='Your search results:' searchedPhotos={userPhotos} />} />
+        <Route key={userPhotos} path="/search/:query" element={(loading) ? <SpinningLoader/> : <PhotoList pageTitle='Your search results:' searchedPhotos={userPhotos} />} />
         <Route path="*" element={<NotFound />}/>
       </Routes>
     </>

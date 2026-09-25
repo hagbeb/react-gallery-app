@@ -1,30 +1,30 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const NoResults = () => {
     console.log('running NoResults');
-
+    // state to record whether we are waiting for results. true = show spinning loader
     const [waiting, setWaiting] = useState(true);
-
-    console.log('waiting after creation: ', waiting);
-
     // function to display message if no results are found
     function displayNotFound() {
-    setWaiting(false);
+        // set waiting to false, which will cause re-render, and show second return ...
+        // ... statement which is the Not Found message, rather than spinning loader
+        setWaiting(false);
         console.log('running displayNotFound');
-
     }
-    setTimeout(displayNotFound, 3000);
-    // while waiting, show the spinning loader icon
+    // after 2 seconds, run function to change state & show Not Found message.
+    setTimeout(displayNotFound, 2000);
+    // while waiting is true, show the spinning loader icon
     if (waiting == true) {
         return (
             <div id="loader-parent">
-                <div class="spinner-loader"></div>
+                <div className="spinner-loader"></div>
             </div>
         );
+    // after waiting set to false, show Not Found message
     } else {
         return (
-            <div class="not-found">
-                <h3>No Matches Found</h3>
+            <div className="not-found">
+                <h1>No Matches Found</h1>
                 <p>Sorry, your search did not return any results. Please try again.</p>
             </div>
         );

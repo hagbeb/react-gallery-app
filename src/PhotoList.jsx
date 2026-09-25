@@ -25,8 +25,8 @@ const PhotoList = (props) => {
     photosToDisplay = [];
   }
 
-  // check if any photos were received in props, via length of photosToDisplay array.
-  // If so, return the results in a <Photo> component
+    // check if any photos were received in props, via length of photosToDisplay array.
+    // If so, return the results in a <Photo> component
     if (photosToDisplay.length != 0) {
       return (
       <div className="photo-container">
@@ -37,11 +37,10 @@ const PhotoList = (props) => {
               <Photo 
                 photo={item.previewURL} 
                 key={item.id}
-            />
+              />
           )}
         </ul>    
       </div>
-
       );
     // if no props were received, wait 3 seconds, then show display not found message
     } else {

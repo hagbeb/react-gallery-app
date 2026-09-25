@@ -1,5 +1,5 @@
-const NoResults = () => {
-    console.log('running NoResults');
+const SpinningLoader = () => {
+    console.log('showing SpinningLoader');
     return (
         <div className="not-found">
             <h1>No Matches Found</h1>
@@ -9,4 +9,4 @@ const NoResults = () => {
     
 }
 
-export default NoResults
+export default SpinningLoader
