@@ -21,6 +21,11 @@ function App() {
   const [computerPhotos, setComputerPhotos] = useState();
   // state to store whether photos are currently being searched for
   const [loading, setLoading] = useState(false);
+  console.log('loading at top of App: ', loading);
+  function sleep(ms) {
+    console.log('about to sleep');
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
   // function to handle fetch requests. Pass in query entered by user
   async function fetchData(userQuery) {
     // set loading to true while we are searching
@@ -60,11 +65,13 @@ function App() {
       console.log(error);
     } finally {
       // once finished, set loading to false. But wait 2 secs if no photos were returned
-      if (responseData) {
-        console.log('loading: ', loading);
+      if (responseData.hits.length == 0) {
+        console.log('no photos 2');
+        await sleep(2000);
         setLoading(false);
       } else {
-        setTimeout(() => setLoading(false), 2000);
+        console.log('loading: ', loading);
+        setLoading(false);
       }
       console.log('loading: ', loading);
     }
