@@ -189,6 +189,14 @@
   text-align: center;
 }
 
+/* container div */
+.container {
+  text-align: center;
+  padding-left: 10%;
+  padding-right: 10%;
+  padding-top: 5px;
+}
+
 /* CSS for spinning loader icon. Credit to Brad Schiff */
 
 @keyframes spin {

@@ -1,4 +1,3 @@
-import React from 'react';
 import Photo from "./Photo";
 import NoResults from "./NoResults";
 import  { useParams } from 'react-router-dom';
@@ -30,7 +29,7 @@ const PhotoList = (props) => {
   // If so, return the results in a <Photo> component
     if (photosToDisplay.length != 0) {
       return (
-      <div class="photo-container">
+      <div className="photo-container">
         <h2>{props.pageTitle}</h2>
         <ul>
           { 
@@ -46,9 +45,11 @@ const PhotoList = (props) => {
       );
     // if no props were received, wait 3 seconds, then show display not found message
     } else {
-      // while waiting, show the spinning loader icon
+      // while waiting, show the spinning loader icon inside the <NoResults> component
+      // pass in the query as a key, so each 'NoResults' component is treated as unique
+      // ... and resets the state inside it on each re-render of PhotoList
       return (
-        <NoResults key={query} waiting={props} />
+        <NoResults key={query} />
       );
     };     
 }
