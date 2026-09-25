@@ -1,5 +1,6 @@
 // component that will display on the * route ie when the URL matches no other route
 const NotFound = () => {
+    // prop for style attribute
     const styles = {
         fontSize: '24px',
         paddingTop: '5px'

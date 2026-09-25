@@ -22,8 +22,8 @@ function App() {
   // state to store whether photos are currently being searched for
   const [loading, setLoading] = useState(false);
   console.log('loading at top of App: ', loading);
+  // function to pause the spinning loader when there are no photos returned
   function sleep(ms) {
-    console.log('about to sleep');
     return new Promise(resolve => setTimeout(resolve, ms));
 }
   // function to handle fetch requests. Pass in query entered by user
@@ -31,7 +31,6 @@ function App() {
     // set loading to true while we are searching
     setLoading(true);
     let responseData;
-    console.log('loading: ', loading);
     // build query to use in fetch
     const fetchQuery = `https://pixabay.com/api/?key=${key}&q=${userQuery}&image_type=photo`;
     // fetch images
@@ -70,7 +69,6 @@ function App() {
         await sleep(2000);
         setLoading(false);
       } else {
-        console.log('loading: ', loading);
         setLoading(false);
       }
       console.log('loading: ', loading);

@@ -24,33 +24,29 @@ const PhotoList = (props) => {
     // ...so setting to empty array ensures consistency for use in condition below
     photosToDisplay = [];
   }
-
-    // check if any photos were received in props, via length of photosToDisplay array.
-    // If so, return the results in a <Photo> component
-    if (photosToDisplay.length != 0) {
-      return (
-      <div className="photo-container">
-        <h2>{props.pageTitle}</h2>
-        <ul>
-          { 
-            photosToDisplay.map(item => 
-              <Photo 
-                photo={item.previewURL} 
-                key={item.id}
-              />
-          )}
-        </ul>    
-      </div>
-      );
-    // if no props were received, wait 3 seconds, then show display not found message
-    } else {
-      // while waiting, show the spinning loader icon inside the <NoResults> component
-      // pass in the query as a key, so each 'NoResults' component is treated as unique
-      // ... and resets the state inside it on each re-render of PhotoList
-      return (
-        <NoResults key={query} />
-      );
-    };     
+  // check if any photos were received in props, via length of photosToDisplay array.
+  // If so, return the results in a <Photo> component
+  if (photosToDisplay.length != 0) {
+    return (
+    <div className="photo-container">
+      <h2>{props.pageTitle}</h2>
+      <ul>
+        { 
+          photosToDisplay.map(item => 
+            <Photo 
+              photo={item.previewURL} 
+              key={item.id}
+            />
+        )}
+      </ul>    
+    </div>
+    );
+  // if no props were received, then show display not found message
+  } else {
+    return (
+      <NoResults key={query} />
+    );
+  };     
 }
 
 export default PhotoList;

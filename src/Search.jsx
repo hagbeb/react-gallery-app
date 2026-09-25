@@ -2,7 +2,6 @@ import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Search = ({makeSearch}) => {
-
   // create ref for users search in form
   const search = useRef();
   // create and store a useNavigate function using the useNavigate hook. 
@@ -13,7 +12,6 @@ const Search = ({makeSearch}) => {
     e.preventDefault();
     // store the users search value
     let userSearch = search.current.value;
-    
     // create the path to redirect to based on the user's search query
     let path = `./search/${userSearch}`;
     // redirect to page based on user's search to display results
@@ -21,7 +19,6 @@ const Search = ({makeSearch}) => {
     // call the fetchData function in App.jsx that was passed as 'makeSearch' prop.
     // pass in the users search in the form that as stored in 'userSearch'
     await makeSearch(userSearch);
-
   }
     return (
       <form className="search-form" onSubmit={handleSubmit} >
